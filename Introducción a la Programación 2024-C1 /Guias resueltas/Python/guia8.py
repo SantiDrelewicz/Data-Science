@@ -11,16 +11,16 @@ from p7 import *
 
 # Ejercicio 1.
 # 1.
-def contar_lineas(nombre_archivo : str) -> int:
-    archivo : str = open(nombre_archivo,"r")
-    cant_lineas : int = 0
+def contar_lineas(nombre_archivo: str) -> int:
+    archivo: str = open(nombre_archivo,"r")
+    cant_lineas: int = 0
     for linea in archivo.readlines():
         cant_lineas += 1
     archivo.close()
     return cant_lineas
 # 2.       
-def existe_palabra(palabra : str, nombre_archivo: str) -> bool:
-   res : bool =False
+def existe_palabra(palabra: str, nombre_archivo: str) -> bool:
+   res: bool =False
    archivo = open(nombre_archivo,"r")
    for linea in archivo.readlines():
        if palabra in linea:
@@ -28,8 +28,8 @@ def existe_palabra(palabra : str, nombre_archivo: str) -> bool:
    archivo.close()
    return res
 # 3.
-def sacar_signos_de_puntuacion(palabras : list[str]) -> [str]:
-    res : list[int] = []
+def sacar_signos_de_puntuacion(palabras: list[str]) -> [str]:
+    res: list[int] = []
     for palabra in palabras:
         if (palabra[-1] < 'A') or ('Z' < palabra[-1] < 'a') or ('z' < palabra[-1]):
             res.append(palabra[:-1])
@@ -38,8 +38,8 @@ def sacar_signos_de_puntuacion(palabras : list[str]) -> [str]:
     return res
         
     
-def cantidad_apariciones(nombre_archivo:str,palabra:str)->int:
-    res : int=0
+def cantidad_apariciones(nombre_archivo: str, palabra: str)->int:
+    res: int = 0
     archivo = open(nombre_archivo,'r')
     contenido_del_archivo = archivo.read()
     palabras_del_archivo = sacar_signos_de_puntuacion(contenido_del_archivo.split())
@@ -50,10 +50,10 @@ def cantidad_apariciones(nombre_archivo:str,palabra:str)->int:
     return res
 
 # Ejercicio 2. 
-def clonar_sin_comentarios(nombre_archivo:str):
+def clonar_sin_comentarios(nombre_archivo: str):
     archivo = open(nombre_archivo,'r')
     archivo_sin_comentarios = open("clon.py","w")
-    lineas = archivo.readlines()
+    lineas: list[str] = archivo.readlines()
     for linea in lineas:
         if not linea.strip()[0] == "#":
             archivo_sin_comentarios.write(linea)
@@ -61,17 +61,17 @@ def clonar_sin_comentarios(nombre_archivo:str):
     archivo_sin_comentarios.close()
 
 # Ejercicio 3.
-def invertir_lista(lista:list) ->list:
-    i : int = 0
-    lista_invertida : list = []
+def invertir_lista(lista: list) ->list:
+    i: int = 0
+    lista_invertida: list = []
     while i < len(lista):
         lista_invertida.append(lista[-i-1])
         i += 1
     return lista_invertida
         
-def invertir_texto(nombre_archivo:str):
+def invertir_texto(nombre_archivo: str):
     archivo = open(nombre_archivo,'r')
-    lineas = archivo.readlines()
+    lineas: list[str] = archivo.readlines()
     lineas_al_reves = invertir_lista(lineas)
     reverso = open('reverso.txt','w')
     for linea in lineas_al_reves:
@@ -80,31 +80,31 @@ def invertir_texto(nombre_archivo:str):
     reverso.close()
 
 # Ejercicio 4.
-def agregar_frase_al_final(nombre_archivo : str,frase : str):
+def agregar_frase_al_final(nombre_archivo: str, frase: str):
     archivo = open(nombre_archivo,'a')
     archivo.write(frase)
     archivo.close()
 
 # Ejercicio 5.
-def agregar_frase_al_principio(nombre_archivo : str,frase : str):
+def agregar_frase_al_principio(nombre_archivo: str, frase: str):
     archivo = open(nombre_archivo,'r+')
-    lineas = archivo.readlines()
+    lineas: list[str] = archivo.readlines()
     archivo.writelines([frase + '\n'] + lineas)
     archivo.close()
 
 # Ejercicio 7.
-def promedio_estudiante(nombre_archivo : str, lu : str)->float:
-    archivo : str = open('notas.csv','r')
-    lineas = archivo.readlines()
-    cant_notas : int = 0
-    nota_acumulada : float = 0
+def promedio_estudiante(nombre_archivo: str, lu: str) -> float:
+    archivo = open('notas.csv','r')
+    lineas: list[str] = archivo.readlines()
+    cant_notas: int = 0
+    nota_acumulada: float = 0
     for linea in lineas:
-        datos = linea.split(",")
+        datos: list[str] = linea.split(",")
         if datos[0] == lu:
             cant_notas += 1
             nota_acumulada += datos[3]
     archivo.close()
-    promedio : float = nota_acumulada/cant_notas
+    promedio: float = nota_acumulada / cant_notas
     return promedio
 
 # def calcular_promedio_por_estudiante(nombre_archivo_notas : str, nombre_archivo_promedios : str) -> str:
@@ -116,37 +116,37 @@ from queue import LifoQueue as Pila
 import random
 
 # Ejercicio 8.
-def generar_nros_al_azar_pila(cantidad : int, desde : int, hasta : int) -> Pila[int]:
-    p = Pila ()
-    n : int = 0
+def generar_nros_al_azar_pila(cantidad: int, desde: int, hasta: int) -> Pila[int]:
+    p: Pila[int] = Pila ()
+    n: int = 0
     while n < cantidad:
         p.put(random.randint(desde,hasta))
         n += 1
     return p
 
 # Ejercicio 9.
-def cantidad_elementos_pila(p : Pila) -> int:
-    res : int = 0
-    elementos_de_p_desapilados : list = []
+def cantidad_elementos_pila(p: Pila) -> int:
+    res: int = 0
+    elementos_de_p_desapilados: list = []
     while not p.empty():
         elementos_de_p_desapilados.append(p.get())
-    elementos_de_p_apilados = invertir_lista(elementos_de_p_desapilados)
+    elementos_de_p_apilados: list = invertir_lista(elementos_de_p_desapilados)
     for elementos_de_p in elementos_de_p_apilados:
         p.put(elementos_de_p)
     res = len(elementos_de_p_apilados)
     return res
 
 # Ejercicio 10.
-def buscar_el_maximo_pila(p : Pila[int]) -> int:
-    maximo : int = p.get()
-    elementos_de_p_desapilados : list[int] = []
+def buscar_el_maximo_pila(p: Pila[int]) -> int:
+    maximo: int = p.get()
+    elementos_de_p_desapilados: list[int] = []
     elementos_de_p_desapilados.append(maximo)
     while not p.empty():
-        numero : int = p.get()
+        numero: int = p.get()
         elementos_de_p_desapilados.append(numero)
         if numero > maximo:
             maximo = numero
-    elementos_de_p_apilados = invertir_lista(elementos_de_p_desapilados)
+    elementos_de_p_apilados: list[int] = invertir_lista(elementos_de_p_desapilados)
     for elementos_de_p in elementos_de_p_apilados:
         p.put(elementos_de_p)
     return maximo
@@ -156,10 +156,10 @@ def buscar_el_maximo_pila(p : Pila[int]) -> int:
 from queue import Queue as Cola
 
 # Ejercicio 13.
-def generar_nros_al_azar_cola(cantidad : int, desde : int, hasta : int) -> Cola[int]:
-    res : Cola[int] = Cola ()
-    for _ in range(0,cantidad):
-        n : int = random.randint(desde,hasta) 
+def generar_nros_al_azar_cola(cantidad: int, desde: int, hasta: int) -> Cola[int]:
+    res: Cola[int] = Cola ()
+    for _ in range(cantidad):
+        n: int = random.randint(desde,hasta) 
         res.put(n)
     return res
 
@@ -190,8 +190,8 @@ def buscar_el_maximo_cola(c : Pila[int]) -> int:
 # Ejericio 16.
 # 1.
 def armar_secuencia_de_bingo() -> Cola[int] :
-    secuencia : Cola[int] = Cola ()
-    nums_0_a_99 = list(range(0,99))
+    secuencia: Cola[int] = Cola ()
+    nums_0_a_99 = list(range(0, 99))
     random.shuffle(nums_0_a_99)
     bolillero = nums_0_a_99
     for bola in bolillero:
