@@ -15,9 +15,9 @@ Salario = float
 # Actividad n°1
 #===================================================================================================
 
-empleado_01: list[tuple[DNI, Edad, CantHijos, Salario]] = [[20_222_333, 45, 2, 20_000],
-                                                           [33_456_234, 40, 0, 25_000],
-                                                           [45_432_345, 41, 1, 10_000]]
+empleado_01: list[tuple[DNI, Edad, CantHijos, Salario]] = [(20_222_333, 45, 2, 20_000),
+                                                           (33_456_234, 40, 0, 25_000),
+                                                           (45_432_345, 41, 1, 10_000)]
 
 def supera_salario_actividad_01(empleados: list[tuple[DNI, Edad, CantHijos, Salario]],
                                 umbral: Salario) -> list[tuple[DNI, Edad, CantHijos, Salario]]:
@@ -35,18 +35,18 @@ def supera_salario_actividad_01(empleados: list[tuple[DNI, Edad, CantHijos, Sala
       res.append(e)
   return res
 
-assert supera_salario_actividad_01(empleado_01, 15_000) == [[20_222_333, 45, 2, 20_000],
-                                                            [33_456_234, 40, 0, 25_000]]
+assert supera_salario_actividad_01(empleado_01, 15_000) == [(20_222_333, 45, 2, 20_000),
+                                                            (33_456_234, 40, 0, 25_000)]
 
 #%%=================================================================================================
 # Actividad n°2
 #===================================================================================================
 
-empleado_02: list[tuple[DNI, Edad, CantHijos, Salario]] = [[20_222_333, 45, 2, 20_000],
-                                                           [33_456_234, 40, 0, 25_000],
-                                                           [45_432_345, 41, 1, 10_000],
-                                                           [43_967_304, 37, 0, 12_000],
-                                                           [42_236_276, 36, 0, 18_000]]
+empleado_02: list[tuple[DNI, Edad, CantHijos, Salario]] = [(20_222_333, 45, 2, 20_000),
+                                                           (33_456_234, 40, 0, 25_000),
+                                                           (45_432_345, 41, 1, 10_000),
+                                                           (43_967_304, 37, 0, 12_000],
+                                                           (42_236_276, 36, 0, 18_000)]
 
 assert supera_salario_actividad_01(empleado_02, 15000) == [[20_222_333, 45, 2, 20_000],
                                                            [33_456_234, 40, 0, 25_000],
@@ -62,9 +62,9 @@ empleado_03: list[tuple[DNI, Salario, Edad, CantHijos]] = [(20_222_333, 20_000, 
                                                            (43_967_304, 12_000, 37, 0),
                                                            (42_236_276, 18_000, 36, 0)]
 
-# assert supera_salario_actividad_01(empleado_03, 15000) == [[20_222_333, 45, 2, 20_000],
-#                                                            [33_456_234, 40, 0, 25_000],
-#                                                            [42_236_276, 36, 0, 18_000]])
+# assert supera_salario_actividad_01(empleado_03, 15000) == [(20_222_333, 45, 2, 20_000),
+#                                                            (33_456_234, 40, 0, 25_000),
+#                                                            (42_236_276, 36, 0, 18_000)]
 
 def supera_salario_actividad_03(empleados_03: list[tuple[DNI, Salario, Edad, CantHijos]],
                                 umbral: Salario) -> list[tuple[DNI, Edad, CantHijos, Salario]]:
@@ -89,9 +89,9 @@ empleado_04: tuple[list[DNI], list[Edad], list[CantHijos], list[Salario]] = (
     [   20000,    25000,    10000,    12000,    18000]
 )
 
-# assert supera_salario_actividad_01(empleado_03, 15000) == [[20_222_333, 45, 2, 20_000],
-#                                                            [33_456_234, 40, 0, 25_000],
-#                                                            [42_236_276, 36, 0, 18_000]])
+# assert supera_salario_actividad_01(empleado_03, 15000) == [(20_222_333, 45, 2, 20_000),
+#                                                            (33_456_234, 40, 0, 25_000),
+#                                                            (42_236_276, 36, 0, 18_000)]
 
 def supera_salario_actividad_04(
     empleados_04: tuple[list[DNI], list[Edad], list[CantHijos], list[Salario]],
