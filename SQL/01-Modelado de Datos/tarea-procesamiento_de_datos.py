@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Materia: Laboratorio de datos - FCEyN - UBA
-Clase  : 04 - Modelado de Datos - Tarea - Procesamiento de Dados.
+Clase  : 01 - Modelado de Datos - Tarea - Procesamiento de Dados.
 Autor  : Santiago Drelewicz
 Fecha  : 2024-02-10
 """
