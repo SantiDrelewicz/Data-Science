@@ -28,7 +28,7 @@ def existe_palabra(palabra: str, nombre_archivo: str) -> bool:
    archivo.close()
    return res
 # 3.
-def sacar_signos_de_puntuacion(palabras: list[str]) -> [str]:
+def sacar_signos_de_puntuacion(palabras: list[str]) -> list[str]:
     res: list[int] = []
     for palabra in palabras:
         if (palabra[-1] < 'A') or ('Z' < palabra[-1] < 'a') or ('z' < palabra[-1]):
@@ -38,11 +38,11 @@ def sacar_signos_de_puntuacion(palabras: list[str]) -> [str]:
     return res
         
     
-def cantidad_apariciones(nombre_archivo: str, palabra: str)->int:
+def cantidad_apariciones(nombre_archivo: str, palabra: str) -> int:
     res: int = 0
     archivo = open(nombre_archivo,'r')
-    contenido_del_archivo = archivo.read()
-    palabras_del_archivo = sacar_signos_de_puntuacion(contenido_del_archivo.split())
+    contenido_del_archivo: str = archivo.read()
+    palabras_del_archivo: list[str] = sacar_signos_de_puntuacion(contenido_del_archivo.split())
     for palabra_del_archivo in palabras_del_archivo:
         if palabra == palabra_del_archivo:
             res += 1
@@ -61,7 +61,7 @@ def clonar_sin_comentarios(nombre_archivo: str):
     archivo_sin_comentarios.close()
 
 # Ejercicio 3.
-def invertir_lista(lista: list) ->list:
+def invertir_lista(lista: list) -> list:
     i: int = 0
     lista_invertida: list = []
     while i < len(lista):
@@ -72,7 +72,7 @@ def invertir_lista(lista: list) ->list:
 def invertir_texto(nombre_archivo: str):
     archivo = open(nombre_archivo,'r')
     lineas: list[str] = archivo.readlines()
-    lineas_al_reves = invertir_lista(lineas)
+    lineas_al_reves: list[str] = invertir_lista(lineas)
     reverso = open('reverso.txt','w')
     for linea in lineas_al_reves:
         reverso.write(linea)
@@ -219,7 +219,7 @@ def jugar_carton_de_bingo(carton : list[int], bolillero : Cola[int]) -> int:
     return cant_jugadas
 
 # Ejericio 17.
-def n_pacientes_urgentes(pedidos_de_atencion : Cola[(int, str, str)]) -> int: 
+def n_pacientes_urgentes(pedidos_de_atencion : Cola[tuple[int, str, str]]) -> int: 
     rango : list[int] = [1,2,3]
     pacientes_urgs : int = 0
     todos_los_pacientes : list[(int,str,str)] = []
@@ -233,12 +233,12 @@ def n_pacientes_urgentes(pedidos_de_atencion : Cola[(int, str, str)]) -> int:
     return pacientes_urgs
 
 # Ejercicio 18.
-def atencion_a_clientes(cola : Cola[(str,int,bool,bool)]) -> Cola[(str,int,bool,bool)]:
-    cola_prioridades : Cola[(str,int,bool,bool)] = Cola()
-    cola_preferenciales : Cola[(str,int,bool,bool)] = Cola()
-    cola_resto : Cola[(str,int,bool,bool)] = Cola()
-    cola_ordenada : Cola[(str,int,bool,bool)] = Cola()
-    cola_aux : Cola[(str,int,bool,bool)] = Cola()
+def atencion_a_clientes(cola : Cola[tuple[str, int, bool, bool]]) -> Cola[tuple[str, int, bool, bool]]:
+    cola_prioridades : Cola[tuple[str, int, bool, bool]] = Cola()
+    cola_preferenciales : Cola[tuple[str, int, bool, bool]] = Cola()
+    cola_resto : Cola[tuple[str, int, bool, bool]] = Cola()
+    cola_ordenada : Cola[tuple[str, int, bool, bool]] = Cola()
+    cola_aux : Cola[tuple[str, int, bool, bool]] = Cola()
     while not cola.empty():
         cliente:(str,int,bool,bool)=cola.get()
         cola_aux.put(cliente)
@@ -264,13 +264,13 @@ def atencion_a_clientes(cola : Cola[(str,int,bool,bool)]) -> Cola[(str,int,bool,
 # 4. Diccionarios.
 
 # Ejercicio 19.
-def agrupar_por_longitud(nombre_archivo : str) -> dict:
+def agrupar_por_longitud(nombre_archivo: str) -> dict:
     archivo = open(nombre_archivo,'r')
     palabras = sacar_signos_de_puntuacion((archivo.read()).split())
-    res : dict = {} 
+    res: dict = {} 
     for palabra in palabras:
-        longitud = len(palabra)
-        claves : list[int] = list(res.keys())
+        longitud: int = len(palabra)
+        claves: list[int] = list(res.keys())
         if pertenece(claves,longitud):
             res[longitud] += 1
         else:
@@ -279,40 +279,40 @@ def agrupar_por_longitud(nombre_archivo : str) -> dict:
     return res
 
 # Ejercicio 20.
-def libretas_universitarias(nombre_archivo_notas : str) -> list[str]:
-    res : list = []
+def libretas_universitarias(nombre_archivo_notas: str) -> list[str]:
+    res: list[str] = []
     archivo = open(nombre_archivo_notas,'r')
     lineas = archivo.readlines()
-    i : int = 0
+    i: int = 0
     while i < len(lineas):
         linea = lineas[i]
-        lu : str = linea[0]
-        if pertenece(res,lu):
+        lu: str = linea[0]
+        if pertenece(res, lu):
             i += 1
         else:
             res.append(lu)
     archivo.close()
     return res
             
-def calcular_promedio_por_estudiante(nombre_archivo_notas : str) -> dict[str, float]:
+def calcular_promedio_por_estudiante(nombre_archivo_notas: str) -> dict[str, float]:
     lus = libretas_universitarias(nombre_archivo_notas)
-    res : dict = {}
+    res: dict = {}
     for lu in lus:
         res[lu] = promedio_estudiante(nombre_archivo_notas, lu)
     return res
 
 # Ejercicio 21.
-def la_palabra_mas_frecuente(nombre_archivo : str) -> str:
+def la_palabra_mas_frecuente(nombre_archivo: str) -> str:
     archivo = open(nombre_archivo,'r')
     palabras = sacar_signos_de_puntuacion((archivo.read()).split())
-    diccionario : dict[str,int] = {}
+    diccionario: dict[str,int] = {}
     for palabra in palabras:
         if pertenece(list(diccionario.keys()),palabra):
             diccionario[palabra] += 1
         else:
             diccionario[palabra] = 1
     claves = list(diccionario.keys())
-    res : str = claves[0]
+    res: str = claves[0]
     for clave in claves:
         apariciones = diccionario[clave]
         if apariciones > diccionario[res]:
@@ -321,38 +321,29 @@ def la_palabra_mas_frecuente(nombre_archivo : str) -> str:
     return res
 
 # Ejercicio 22.
-# historiales:dict[str,Pila]={}
 
-# def visitar_sitio(historiales:dict,usuario:str,sitio:str):
-#     historiales[usuario].put(sitio)
+def visitar_sitio(historiales: dict, usuario: str, sitio: str):
+    historiales[usuario].put(sitio)
 
-# def navegar_atras(historiales:dict,usuario:str):
-#     historiales[usuario].get()
+def navegar_atras(historiales: dict ,usuario: str):
+    historiales[usuario].get()
 
 # Ejercicio 23.
 # 1.
-def agregar_producto(inventario : dict[str,dict[str,int]], nombre : str, precio : int, cantidad : int) -> dict[str,dict[str,int]]:
-  inventario[nombre] : dict[int,int]= {'precio' : precio, 'cantidad' : cantidad}
+def agregar_producto(inventario: dict[str, dict[str,int]], nombre: str, precio: int, cantidad: int) -> dict[str, dict[str, int]]:
+  inventario[nombre] = {'precio': precio, 'cantidad': cantidad}
 # 2.
-def actualizar_stock(inventario : dict[str,dict[str,int]], nombre : str, cantidad : int) -> dict[str,dict[str,int]]:
+def actualizar_stock(inventario: dict[str, dict[str, int]], nombre: str, cantidad: int):
   inventario[nombre]['cantidad'] = cantidad
 # 3.
-def actualizar_precios(inventario : dict[str,dict[str,int]], nombre : str, precio : int) -> dict[str,dict[str,int]]:
+def actualizar_precios(inventario: dict[str, dict[str, int]], nombre: str, precio: int):
   inventario[nombre]['precio'] = precio
 # 4.
-def calcular_valor_inventario(inventario : dict[str,dict[str,int]]) -> float:
+def calcular_valor_inventario(inventario : dict[str, dict[str, int]]) -> float:
   valor_inventario : int = 0
   for clave in inventario.keys():
-    valor_inventario += inventario[clave]['precio']*inventario[clave]['cantidad']
-  return valor_inventario        
-
-           
-    
-    
-    
-    
-    
-    
+    valor_inventario += inventario[clave]['precio'] * inventario[clave]['cantidad']
+  return valor_inventario     
     
     
     
