@@ -37,8 +37,8 @@ def apply_gaussian_filter(image, kernel):
 
 if __name__ == "__main__":
     # Parámetros del filtro Gaussiano
-    kernel_size = 7  # Tamaño del kernel
-    sigma = 1      # Desviación estándar
+    kernel_size = 81  # Tamaño del kernel
+    sigma = 3      # Desviación estándar
 
     # Cargar imagen
     image_path = 'fig2.jpg'
@@ -54,7 +54,7 @@ if __name__ == "__main__":
     Z = gaussian_kernel.squeeze()
 
     #imprimir filtro
-    print(gaussian_kernel)
+    # print(gaussian_kernel)
 
     fig = plt.figure(figsize=(15, 5))
 

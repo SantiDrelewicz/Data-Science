@@ -73,7 +73,7 @@ if __name__ == "__main__":
     Z = mh_kernel.squeeze()
 
     #imprimir filtro
-    print(mh_kernel)
+    # print(mh_kernel)
 
     fig = plt.figure(figsize=(15, 5))
 

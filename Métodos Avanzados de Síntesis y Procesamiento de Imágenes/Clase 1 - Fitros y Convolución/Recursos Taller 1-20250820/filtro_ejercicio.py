@@ -59,10 +59,10 @@ if __name__ == "__main__":
     print(image.shape)
 
     # Aplicar filtro
-    imgfiltrada = aplicar_filtro(image, k1)
+    imgfiltrada = aplicar_filtro(image, k2)
 
     # Encontrar el mejor umbral!
-    thr_val = 0.0
+    thr_val = 4.5
 
     # Aplicar umbral
     imgthr = aplicar_umbral(torch.abs(imgfiltrada), thr_val)
@@ -70,6 +70,7 @@ if __name__ == "__main__":
 
     # Visualizar resultados
     plt.figure(figsize=(12, 4))
+    
     plt.subplot(1, 3, 1)
     plt.title('Imagen Original')
     plt.imshow(image.squeeze(), cmap='gray')
