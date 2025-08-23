@@ -54,7 +54,7 @@ def apply_MH_filter(image, kernel):
     return F.conv2d(image, kernel, padding=kernel.size(-1) // 2)
 
 
-if "_name__" == "__main__":
+if __name__ == "__main__":
     # Parámetros del filtro Gaussiano
     kernel_size = 11  # Tamaño del kernel
     sigma = 2      # Desviación estándar

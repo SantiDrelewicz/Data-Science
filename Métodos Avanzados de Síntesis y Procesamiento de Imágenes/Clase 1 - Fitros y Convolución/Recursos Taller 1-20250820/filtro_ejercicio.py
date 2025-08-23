@@ -52,7 +52,7 @@ def aplicar_umbral(image, umbral):
     return thr_layer(image) 
 
 
-if "__name__" == "__main__":
+if __name__ == "__main__":
     # Cargar imagen
     image_path = 'fig3.jpg'
     image = load_image(image_path)

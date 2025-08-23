@@ -26,7 +26,7 @@ def apply_prewitt_filter(image, kernel):
     return F.conv2d(image, kernel, padding=1)
 
 
-if "__name__" == "__main__":
+if __name__ == "__main__":
     # Cargar imagen
     image_path = 'fig1.jpg'
     image = load_image(image_path)

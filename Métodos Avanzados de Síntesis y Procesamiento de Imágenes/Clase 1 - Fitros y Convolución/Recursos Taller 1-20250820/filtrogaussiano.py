@@ -1,5 +1,3 @@
-
-
 import torch
 import torch.nn.functional as F
 from PIL import Image
@@ -37,7 +35,7 @@ def apply_gaussian_filter(image, kernel):
     return F.conv2d(image, kernel, padding=kernel.size(-1) // 2)
 
 
-if "__name__" == "__main__":
+if __name__ == "__main__":
     # Parámetros del filtro Gaussiano
     kernel_size = 7  # Tamaño del kernel
     sigma = 1      # Desviación estándar
