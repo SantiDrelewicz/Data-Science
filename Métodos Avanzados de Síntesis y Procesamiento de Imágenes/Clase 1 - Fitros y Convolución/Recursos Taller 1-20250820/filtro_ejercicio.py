@@ -23,67 +23,63 @@ def load_image(image_path):
     image = image.unsqueeze(0)  # Añadir un batch dimension
     return image
 
-
-#k1 = 
-#     1     1     1
-#     1    -2     1
-#    -1    -1    -1
-
-#k2 =
-#     3     3     3
-#     3     0    -5
-#     3    -5    -5
-
-#k3 = 
-#    -5     3     3
-#    -5     0     3
-#    -5     3     3
-
 # Filtros
-k1 = torch.tensor([[1, 1, 1], [1, -2, 1], [-1, -1, -1]], dtype=torch.float32).unsqueeze(0).unsqueeze(0)
-k2 = torch.tensor([[3, 3, 3], [3, 0, -5], [3, -5, -5]], dtype=torch.float32).unsqueeze(0).unsqueeze(0)
-k3 = torch.tensor([[-5, 3, 3], [-5, 0, 3], [-5, 3, 3]], dtype=torch.float32).unsqueeze(0).unsqueeze(0)
-
+k1 = torch.tensor(
+    [[ 1,  1,  1], 
+     [ 1, -2,  1], 
+     [-1, -1, -1]], dtype=torch.float32
+).unsqueeze(0).unsqueeze(0)
+k2 = torch.tensor(
+    [[3,  3,  3], 
+     [3,  0, -5], 
+     [3, -5, -5]], dtype=torch.float32
+).unsqueeze(0).unsqueeze(0)
+k3 = torch.tensor(
+    [[-5, 3, 3], 
+     [-5, 0, 3], 
+     [-5, 3, 3]], dtype=torch.float32
+).unsqueeze(0).unsqueeze(0)
 
 # Aplicar el filtro de convolución
 def aplicar_filtro(image, kernel):
     return F.conv2d(image, kernel, padding=1)
 
+
 def aplicar_umbral(image, umbral):
     # Función que dada una imagen de entrada (tensor) aplica el umbral retornando
     # una imagen binaria, con ceros en la pixeles que no superan el valor del umbral.
-
-    thr_layer = torch.nn.Threshold(threshold=umbral,value=0)
+    thr_layer = torch.nn.Threshold(threshold=umbral, value=0)
     return thr_layer(image) 
 
 
-# Cargar imagen
-image_path = 'fig3.jpg'
-image = load_image(image_path)
-print(image.shape)
+if "__name__" == "__main__":
+    # Cargar imagen
+    image_path = 'fig3.jpg'
+    image = load_image(image_path)
+    print(image.shape)
 
-# Aplicar filtro
-imgfiltrada = aplicar_filtro(image, k1)
+    # Aplicar filtro
+    imgfiltrada = aplicar_filtro(image, k1)
 
-# Encontrar el mejor umbral!
-thr_val = 0.0
+    # Encontrar el mejor umbral!
+    thr_val = 0.0
 
-# Aplicar umbral
-imgthr = aplicar_umbral(torch.abs(imgfiltrada), thr_val)
-#imgthr = imgfiltrada
+    # Aplicar umbral
+    imgthr = aplicar_umbral(torch.abs(imgfiltrada), thr_val)
+    #imgthr = imgfiltrada
 
-# Visualizar resultados
-plt.figure(figsize=(12, 4))
-plt.subplot(1, 3, 1)
-plt.title('Imagen Original')
-plt.imshow(image.squeeze(), cmap='gray')
+    # Visualizar resultados
+    plt.figure(figsize=(12, 4))
+    plt.subplot(1, 3, 1)
+    plt.title('Imagen Original')
+    plt.imshow(image.squeeze(), cmap='gray')
 
-plt.subplot(1, 3, 2)
-plt.title('Imagen filtrada')
-plt.imshow(imgfiltrada.squeeze().detach().numpy(), cmap='gray')
+    plt.subplot(1, 3, 2)
+    plt.title('Imagen filtrada')
+    plt.imshow(imgfiltrada.squeeze().detach().numpy(), cmap='gray')
 
-plt.subplot(1, 3, 3)
-plt.title('Imagen de umbral')
-plt.imshow(imgthr.squeeze().detach().numpy(), cmap='gray')
+    plt.subplot(1, 3, 3)
+    plt.title('Imagen de umbral')
+    plt.imshow(imgthr.squeeze().detach().numpy(), cmap='gray')
 
-plt.show()
+    plt.show()

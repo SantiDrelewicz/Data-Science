@@ -36,51 +36,49 @@ def gaussian_kernel(size, sigma):
 def apply_gaussian_filter(image, kernel):
     return F.conv2d(image, kernel, padding=kernel.size(-1) // 2)
 
-# Parámetros del filtro Gaussiano
-kernel_size = 7  # Tamaño del kernel
-sigma = 1      # Desviación estándar
 
-# Cargar imagen
-image_path = 'fig2.jpg'
-image = load_image(image_path)
+if "__name__" == "__main__":
+    # Parámetros del filtro Gaussiano
+    kernel_size = 7  # Tamaño del kernel
+    sigma = 1      # Desviación estándar
 
-# Crear y aplicar el filtro Gaussiano
-gaussian_kernel = gaussian_kernel(kernel_size, sigma)
-blurred_image = apply_gaussian_filter(image, gaussian_kernel)
+    # Cargar imagen
+    image_path = 'fig2.jpg'
+    image = load_image(image_path)
 
-x = torch.arange(-kernel_size // 2 + 1., kernel_size // 2 + 1.)
-y = x.clone()
-X, Y = torch.meshgrid(x, y, indexing='xy')
-Z = gaussian_kernel.squeeze()
+    # Crear y aplicar el filtro Gaussiano
+    gaussian_kernel = gaussian_kernel(kernel_size, sigma)
+    blurred_image = apply_gaussian_filter(image, gaussian_kernel)
 
+    x = torch.arange(-kernel_size // 2 + 1., kernel_size // 2 + 1.)
+    y = x.clone()
+    X, Y = torch.meshgrid(x, y, indexing='xy')
+    Z = gaussian_kernel.squeeze()
 
-#imprimir filtro
-print(gaussian_kernel)
+    #imprimir filtro
+    print(gaussian_kernel)
 
+    fig = plt.figure(figsize=(15, 5))
 
-fig = plt.figure(figsize=(15, 5))
+    # Imagen original
+    ax1 = fig.add_subplot(1, 3, 1)
+    ax1.set_title('Imagen Original')
+    ax1.imshow(image.squeeze(), cmap='gray')
 
-# Imagen original
-ax1 = fig.add_subplot(1, 3, 1)
-ax1.set_title('Imagen Original')
-ax1.imshow(image.squeeze(), cmap='gray')
+    # Imagen filtrada
+    ax2 = fig.add_subplot(1, 3, 2)
+    ax2.set_title('Imagen con Filtro Gaussiano')
+    ax2.imshow(blurred_image.squeeze().detach().numpy(), cmap='gray')
 
-# Imagen filtrada
-ax2 = fig.add_subplot(1, 3, 2)
-ax2.set_title('Imagen con Filtro Gaussiano')
-ax2.imshow(blurred_image.squeeze().detach().numpy(), cmap='gray')
+    # Kernel 3D
+    ax3 = fig.add_subplot(1, 3, 3, projection='3d')
+    ax3.plot_surface(X.numpy(), Y.numpy(), Z.numpy(), cmap='viridis')
+    ax3.set_title('Kernel Gaussiano')
+    ax3.set_xlabel('X')
+    ax3.set_ylabel('Y')
+    ax3.set_zlabel('Valor')
 
-
-# Kernel 3D
-ax3 = fig.add_subplot(1, 3, 3, projection='3d')
-ax3.plot_surface(X.numpy(), Y.numpy(), Z.numpy(), cmap='viridis')
-ax3.set_title('Kernel Gaussiano')
-ax3.set_xlabel('X')
-ax3.set_ylabel('Y')
-ax3.set_zlabel('Valor')
-
-
-plt.show()
+    plt.show()
 
 
 
