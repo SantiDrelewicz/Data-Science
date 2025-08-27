@@ -1,20 +1,7 @@
 import torch
 import torch.nn.functional as F
-from PIL import Image
 import matplotlib.pyplot as plt
-import torchvision.transforms as transforms
-
-# Cargar y transformar la imagen
-def load_image(image_path):
-    transform = transforms.Compose([
-        transforms.Grayscale(),  # Convertir a escala de grises
-        transforms.ToTensor()    # Convertir a tensor
-    ])
-    image = Image.open(image_path)
-    image = transform(image)
-    image = image.unsqueeze(0)  # Añadir un batch dimension
-    return image
-
+from loader import load_image
 
 # Definir filtros de Prewitt
 prewitt_x = torch.tensor(

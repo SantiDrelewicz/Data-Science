@@ -1,27 +1,15 @@
-
-
 import torch
 import torch.nn.functional as F
-from PIL import Image
 import matplotlib.pyplot as plt
-import torchvision.transforms as transforms
 import os
+from loader import load_image
+
 #windows
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 #set KMP_DUPLICATE_LIB_OK=True
 #linux
 #export KMP_DUPLICATE_LIB_OK=True
 
-# Cargar y transformar la imagen
-def load_image(image_path):
-    transform = transforms.Compose([
-        transforms.Grayscale(),  # Convertir a escala de grises
-        transforms.ToTensor()    # Convertir a tensor
-    ])
-    image = Image.open(image_path)
-    image = transform(image)
-    image = image.unsqueeze(0)  # Añadir un batch dimension
-    return image
 
 # Crear el filtro Gaussiano
 def mexican_hat(kernel_size=21, sigma=3.0):
@@ -56,8 +44,8 @@ def apply_MH_filter(image, kernel):
 
 if __name__ == "__main__":
     # Parámetros del filtro Gaussiano
-    kernel_size = 11  # Tamaño del kernel
-    sigma = 2      # Desviación estándar
+    kernel_size = 21  # Tamaño del kernel
+    sigma = 5      # Desviación estándar
 
     # Cargar imagen
     image_path = 'fig2.jpg'

@@ -1,25 +1,14 @@
 import torch
 import torch.nn.functional as F
-from PIL import Image
 import matplotlib.pyplot as plt
-import torchvision.transforms as transforms
 import os
+from loader import load_image
+
 #windows
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 #set KMP_DUPLICATE_LIB_OK=True
 #linux
 #export KMP_DUPLICATE_LIB_OK=True
-
-# Cargar y transformar la imagen
-def load_image(image_path):
-    transform = transforms.Compose([
-        transforms.Grayscale(),  # Convertir a escala de grises
-        transforms.ToTensor()    # Convertir a tensor
-    ])
-    image = Image.open(image_path)
-    image = transform(image)
-    image = image.unsqueeze(0)  # Añadir un batch dimension
-    return image
 
 # Crear el filtro Gaussiano
 def gaussian_kernel(size, sigma):
@@ -45,13 +34,13 @@ if __name__ == "__main__":
     image = load_image(image_path)
 
     # Crear y aplicar el filtro Gaussiano
-    gaussian_kernel = gaussian_kernel(kernel_size, sigma)
-    blurred_image = apply_gaussian_filter(image, gaussian_kernel)
+    gauss_kernel = gaussian_kernel(kernel_size, sigma)
+    blurred_image = apply_gaussian_filter(image, gauss_kernel)
 
     x = torch.arange(-kernel_size // 2 + 1., kernel_size // 2 + 1.)
     y = x.clone()
     X, Y = torch.meshgrid(x, y, indexing='xy')
-    Z = gaussian_kernel.squeeze()
+    Z = gauss_kernel.squeeze()
 
     #imprimir filtro
     # print(gaussian_kernel)
