@@ -168,9 +168,10 @@ if __name__ == "__main__":
         download_images(dataset_folder)
     img_dataset = load_dataset(dataset_folder)
     # declaracion modelo
+    Nh = 18
     model = MLP(
         input_size=HOG_FEATURE_LENGTH, 
-        hidden_size=18, 
+        hidden_size=Nh, 
         output_size=len(DIGITOS)
     )
     loss_fnc = nn.MSELoss()
