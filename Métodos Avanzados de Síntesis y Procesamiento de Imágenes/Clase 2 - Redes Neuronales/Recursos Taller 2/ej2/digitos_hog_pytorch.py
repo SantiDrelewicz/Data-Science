@@ -159,7 +159,6 @@ def train(
               (epoch, epoch_loss, epoch_correct,val_correct))
 
 
-
 if __name__ == "__main__":
     dataset_folder = os.path.join(
         os.path.dirname(os.path.abspath(__file__)),
@@ -175,7 +174,7 @@ if __name__ == "__main__":
         output_size=len(DIGITOS)
     )
     loss_fnc = nn.MSELoss()
-    optimizer = optim.SGD(model.parameters(), lr=1e-1)
+    optimizer =  optim.SGD(model.parameters(), lr=1e-1)
     test_size = 0.25
     nepochs = 50
     train(model, loss_fnc, optimizer, 
@@ -185,7 +184,3 @@ if __name__ == "__main__":
               test_size=test_size, random_state=42
           ),
           nepochs=nepochs)
-
-    
-    
-        
