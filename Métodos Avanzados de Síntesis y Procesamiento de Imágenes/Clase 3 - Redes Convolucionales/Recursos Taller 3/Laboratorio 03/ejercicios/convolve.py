@@ -1,28 +1,32 @@
 import numpy as np
+from helper_functions import conv2
+from scipy.special import expit
 
 
-def cnnConvolve(filterDim, numFilters, images, Wc, bc):
+def cnnConvolve(filterDim: int, numFilters: int, 
+                images: np.ndarray, 
+                Wc: np.ndarray, bc: np.ndarray) -> np.ndarray:
     """
     cnnConvolve Devuelve el resultado de hacer la convolucion de W y b con
-    las imagenes de entrada   
-    ### Parametros:
-     - filterDim: dimension del filtro
-     - numFilters: cantidad de filtros
-     - images: imagenes 2D para convolucionar. Estas imagenes tienen un solo
-     canal (gray scaled). El array images es del tipo images(r, c, image number)
-     - Wc, bc: Wc, bc para calcular los features
-            - Wc tiene tamanio (filterDim,filterDim,numFilters)
-            - bc tiene tamanio (numFilters,1)    
-    ### Devuelve:
-     - convolvedFeatures: matriz de descriptores convolucionados de la forma
+    las imagenes de entrada.
+
+    Parametros:
+    -----------
+    - filterDim: dimension del filtro
+    - numFilters: cantidad de filtros
+    - images: imagenes 2D para convolucionar. Estas imagenes tienen un solo
+        canal (gray scaled). El array images es del tipo images(r, c, image number)
+    - Wc, bc: Wc, bc para calcular los features
+        - Wc tiene tamanio (filterDim,filterDim,numFilters)
+        - bc tiene tamanio (numFilters,1)    
+    Devuelve:
+    ---------
+    - convolvedFeatures: matriz de descriptores convolucionados de la forma
                          convolvedFeatures(imageRow, imageCol, featureNum, imageNum)
     """
     
-    imageDim = images.shape[0]
-    numImages = images.shape[2]
-    
-    convDim = imageDim - filterDim + 1;
-    
+    imageDim, numImages = images.shape[0], images.shape[2]
+    convDim = imageDim - filterDim + 1
     convolvedFeatures = np.zeros((convDim, convDim, numFilters, numImages))
     
     #% Instrucciones:
@@ -35,29 +39,27 @@ def cnnConvolve(filterDim, numFilters, images, Wc, bc):
     for imageNum in range(numImages):
         for filterNum in range(numFilters):
             #% convolucion simple de una imagen con un filtro
-            convolvedImage = np.zeros((convDim, convDim))
+            convolvedImage = np.zeros((convDim, convDim), dtype=np.float32)
             #% Obtener el filtro (filterDim x filterDim) 
             f = Wc[:,:,filterNum]
     
             #% Girar la matriz dada la definicion de convolucion
-            f = np.rot90(np.squeeze(f),2);
+            f = np.rot90(np.squeeze(f), 2)
             #% Obtener la imagen
             im = np.squeeze(images[:, :, imageNum])
     
             #%%% IMPLEMENTACION AQUI %%%
-            #% Convolucionar "filter" con "im", y adicionarlos a 
-            #% convolvedImage para estar seguro de realizar una convolucion
-            #% 'valida'
-            #% Girar la matriz dada la definicion de convolucion si es necesario (con conv2 no lo es)
-            convolvedImage = 0
-    
+            #% Convolucionar "filter" con "im", y adicionarlos a convolvedImage 
+            #% para estar seguro de realizar una convolucion 'valida';
+            #% Girar la matriz dada la definicion de convolucion si es necesario (con conv2 no lo es).
+            f = np.rot90(f, 2)
+            convolvedImage += conv2(im, f, mode='valid')
             #%%% IMPLEMENTACION AQUI %%%
             #% Agregar el bias 
-            convolvedImage += 0
-    
+            convolvedImage += bc[filterNum]
             #%%% IMPLEMENTACION AQUI %%%
             #% Luego, aplicar la funcion sigmoide para obtener la activacion de 
             #% la neurona.
-            convolvedFeatures[:, :, filterNum, imageNum] = 0
+            convolvedFeatures[:, :, filterNum, imageNum] = expit(convolvedImage)
 
     return convolvedFeatures

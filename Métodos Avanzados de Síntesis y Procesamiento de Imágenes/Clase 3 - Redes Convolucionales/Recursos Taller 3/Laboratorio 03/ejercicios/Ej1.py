@@ -1,7 +1,7 @@
 import numpy as np
 import os, sys
-from helper_functions import loadDataset
-from convolve import cnnConvolve
+from helper_functions import downloadImages, loadDataset
+from convolve import cnnConvolve, expit
 # ======================================================================
 #  PASO 1: Implementar y Testear la convolucion
 #   En esta etapa, se debe implementar la operacion de convolucion. Se
@@ -14,10 +14,18 @@ poolDim = 3          #% dimension of pooling region
 #  1a: Implementar la funcion cnnConvolve en helper_functions.py
 #  Usamos un set pequeño de imagenes: las 8 primeras
 digitos = ['0','1','2','3','4','5','6','7','8','9']
-dataset_folder = '../data/BaseOCR_MultiStyle'
+#  Descargamos el dataset en la carpeta ..data.BaseOCR_MultiStyle
+script_dir = os.path.dirname(os.path.abspath(__file__))
+labo_dir = os.path.dirname(script_dir)
+data_dir = os.path.join(labo_dir, "data")
+dataset_folder = os.path.join(data_dir, "BaseOCR_MultiStyle")
+if not os.path.exists(dataset_folder):
+    downloadImages(data_dir)
 Nc = len(digitos)
-imageDim = 28;         #% image dimension
-images, labels = loadDataset(dataset_folder, digitos, Nc, imageDim)
+imageDim = 28  #% image dimension
+images, labels = loadDataset(
+    dataset_folder, digitos, Nc, imageDim, rm_dataset_folder=True
+)
 convImages = images[:, :, 0:8]; 
 
 
@@ -43,10 +51,10 @@ for i in range(1000):
     imageCol = np.random.randint(0, imageDim - filterDim + 1);    
    
     patch = convImages[imageRow:imageRow + filterDim, imageCol:imageCol + filterDim, imageNum]
-    w = np.rot90(W[:,:,filterNum],2)
+    w = np.rot90(W[:,:,filterNum], 2)
     feature = np.sum(patch * w )+b[filterNum];
-    feature = 1. / ( 1. + np.exp(-feature)) # sigmoide
-    
+    feature = expit(feature) # sigmoide
+
     if np.abs(feature - convolvedFeatures[imageRow, imageCol,filterNum, imageNum]) > 1e-4:
         print('La salida de cnnConvolve no coincide con el test\n');
         print('Numero de filtro  : %d\n' % filterNum);
@@ -58,4 +66,3 @@ for i in range(1000):
         sys.exit('La salida de cnnConvolve no coincide con el test')
 
 print('Felicitacines! Su implementacion paso el test.')
-

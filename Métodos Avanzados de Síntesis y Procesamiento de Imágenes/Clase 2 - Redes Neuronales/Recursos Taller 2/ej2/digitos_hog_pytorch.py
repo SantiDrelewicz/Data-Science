@@ -161,12 +161,13 @@ def train(
 
 if __name__ == "__main__":
     dataset_folder = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
-        "BaseOCR_MultiStyle"
+        os.path.dirname(os.path.abspath(__file__)), "datos"
     )
     if not os.path.exists(dataset_folder):
         download_images(dataset_folder)
-    img_dataset = load_dataset(dataset_folder)
+    img_dataset = load_dataset(
+        os.path.join(dataset_folder, "BaseOCR_MultiStyle")
+    )
     # declaracion modelo
     Nh = 18
     model = MLP(
@@ -178,10 +179,14 @@ if __name__ == "__main__":
     optimizer =  optim.SGD(model.parameters(), lr=1e-1)
     test_size = 0.25
     nepochs = 50
-    train(model, loss_fnc, optimizer, 
-          train_test_split(
-              np.array(img_dataset["data"], dtype=np.float32), 
-              np.array(img_dataset["target"], dtype=np.float32), 
-              test_size=test_size, random_state=42
-          ),
-          nepochs=nepochs)
+    X_train, X_test, y_train, y_test = train_test_split(
+        np.array(img_dataset["data"], dtype=np.float32), 
+        np.array(img_dataset["target"], dtype=np.float32), 
+        test_size=test_size, random_state=42
+    )
+    train(
+        model, loss_fnc, optimizer, 
+        X_train, y_train, 
+        X_test, y_test,
+        nepochs=nepochs
+    )
