@@ -1,43 +1,6 @@
 import numpy as np
 from scipy.signal import convolve as conv2
 import cv2, os
-import requests
-import tarfile
-import io
-
-def downloadImages(download_path: str):
-    """
-    Descarga el archivo .tar.gz desde la URL y extrae únicamente 
-    la carpeta 'BaseOCR_MultiStyle' directamente en el directorio
-    donde está este script.
-    """
-    url = "https://www.ipol.im/pub/art/2018/173/svmsmo_1.tar.gz"
-    target_folder = "svm_smo/SVMCode/Datasets/BaseOCR_MultiStyle"
-    
-    # Descargar en memoria
-    response = requests.get(url)
-    response.raise_for_status()
-    
-    file_like = io.BytesIO(response.content)
-    
-    with tarfile.open(fileobj=file_like, mode="r:gz") as tar:
-        # Filtrar miembros de la carpeta deseada
-        members = [m for m in tar.getmembers() 
-                   if m.name.startswith(target_folder + "/")]
-        
-        if not members:
-            raise ValueError(
-                f"La carpeta '{target_folder}' no se encontró en el archivo."
-            )
-        
-        # Reescribir los nombres para que arranquen desde 'BaseOCR_MultiStyle'
-        for m in members:
-            # Quitar el prefijo "svmsmo_1/svm_smo/SVMCode/Datasets/"
-            m.name = m.name.replace(target_folder, "BaseOCR_MultiStyle", 1)
-        
-        # Extraer directamente en el directorio del script
-        tar.extractall(path=download_path, members=members)
-
 
 
 def loadDataset(dataset_folder, digitos, Nc, imageDim, rm_dataset_folder=False):
@@ -72,24 +35,27 @@ def loadDataset(dataset_folder, digitos, Nc, imageDim, rm_dataset_folder=False):
     return data, target
 
 
-def cnnInitParams(imageDim, filterDim, numFilters, poolDim, numClasses):
+def cnnInitParams(
+    imageDim: int, filterDim: int, numFilters: int, poolDim: int, numClasses: int
+):
     """
     Initialize parameters for a single layer convolutional neural
     network followed by a softmax layer.  
 
-    Parameters:
-    ------------
-    - imageDim   :  height/width of image
-    - filterDim  :  dimension of convolutional filter                            
-    - numFilters :  number of convolutional filters
-    - poolDim    :  dimension of pooling area
-    - numClasses :  number of classes to predict
-    Returns:
-    ----------
-     theta - unrolled parameter vector with initialized weights
+    Parameters
+    -----------
+    imageDim   :  height/width of image
+    filterDim  :  dimension of convolutional filter                            
+    numFilters :  number of convolutional filters
+    poolDim    :  dimension of pooling area
+    numClasses :  number of classes to predict
+
+    Returns
+    -------
+    theta : unrolled parameter vector with initialized weights
     """
     #% Initialize parameters randomly based on layer sizes.
-    assert(filterDim < imageDim),'filterDim must be less that imageDim'
+    assert(filterDim < imageDim),'filterDim must be lower than imageDim'
     Wc = 1e-1*np.random.randn(filterDim,filterDim,numFilters)
 
     outDim = imageDim - filterDim + 1 #% dimension of convolved image
@@ -105,12 +71,20 @@ def cnnInitParams(imageDim, filterDim, numFilters, poolDim, numClasses):
     # % Convert weights and bias gradients to the vector form.
     # % This step will "unroll" (flatten and concatenate together) all 
     # % your parameters into a vector, which can then be used with minFunc. 
-    theta = np.vstack((np.expand_dims(Wc.flatten(),1),np.expand_dims(Wd.flatten(),1), 
-                       np.expand_dims(bc.flatten(),1), np.expand_dims(bd.flatten(),1)))
+    theta = np.vstack((
+        np.expand_dims(Wc.flatten(), 1), np.expand_dims(Wd.flatten(), 1), 
+        np.expand_dims(bc.flatten(), 1), np.expand_dims(bd.flatten(), 1)
+    ))
     return theta
 
 
-def cnnParamsToStack(theta, imageDim, filterDim, numFilters, poolDim, numClasses):
+def cnnParamsToStack(
+    theta: np.ndarray, 
+    imageDim: int, 
+    filterDim: int, numFilters: int, 
+    poolDim: int, 
+    numClasses: int
+):
     """
     Converts unrolled parameters for a single layer convolutional neural
     network followed by a softmax layer into structured weight
@@ -118,30 +92,20 @@ def cnnParamsToStack(theta, imageDim, filterDim, numFilters, poolDim, numClasses
 
     Parameters
     ----------
-    theta: np.array 
-        unrolled parameter vector
-    imageDim: int
-        height/width of image
-    filterDim: int
-        dimension of convolutional filter
-    numFilters: int
-        number of convolutional filters
-    poolDim: int
-        dimension of pooling area
-    numClasses: int
-        number of classes to predict
+    theta : unrolled parameter vector
+    imageDim : height/width of image
+    filterDim : dimension of convolutional filter
+    numFilters : number of convolutional filters
+    poolDim : dimension of pooling area
+    numClasses : number of classes to predict
 
     Returns
     -------
-    Wc        
-        filterDim x filterDim x numFilters parameter matrix
-    Wd        
-        numClasses x hiddenSize parameter matrix, hiddenSize is
-        calculated as numFilters*((imageDim-filterDim+1)/poolDim)^2 
-    bc        
-        bias for convolution layer of size numFilters x 1
-    bd        
-        bias for dense layer of size hiddenSize x 1
+    Wc : filterDim x filterDim x numFilters parameter matrix
+    Wd : numClasses x hiddenSize parameter matrix, hiddenSize is
+         calculated as numFilters*((imageDim-filterDim+1)/poolDim)^2
+    bc : bias for convolution layer of size numFilters x 1
+    bd : bias for dense layer of size hiddenSize x 1
     """
     outDim = (imageDim - filterDim + 1)/poolDim
     hiddenSize = int(outDim**2*numFilters)
