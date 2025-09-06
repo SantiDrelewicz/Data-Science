@@ -61,7 +61,7 @@ def cnnInitParams(
     outDim = imageDim - filterDim + 1 #% dimension of convolved image
     #% assume outDim is multiple of poolDim
     assert(outDim % poolDim==0) ,'poolDim must divide imageDim - filterDim + 1'
-    outDim = int(outDim/poolDim)
+    outDim = outDim // poolDim
     hiddenSize = numFilters * outDim**2
     #% we'll choose weights uniformly from the interval [-r, r]
     r  = np.sqrt(6) / np.sqrt(numClasses+hiddenSize+1)
@@ -107,9 +107,9 @@ def cnnParamsToStack(
     bc : bias for convolution layer of size numFilters x 1
     bd : bias for dense layer of size hiddenSize x 1
     """
-    outDim = (imageDim - filterDim + 1)/poolDim
-    hiddenSize = int(outDim**2*numFilters)
-    
+    outDim = (imageDim - filterDim + 1) // poolDim
+    hiddenSize = numFilters * outDim**2
+
     #%% Reshape theta
     indS = 0
     indE = numFilters * filterDim**2

@@ -1,14 +1,22 @@
 import numpy as np
 import os, sys
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+LABO_PATH = os.path.dirname(SCRIPT_DIR)
+sys.path.append(LABO_PATH)
 from helper_functions import cnnInitParams, loadDataset, cnnParamsToStack
-from helper_functions import cnnConvolve, cnnPool
+from convolve import cnnConvolve
+from pooling import cnnPool
 from scipy.signal import convolve as conv2
 
 digitos = ['0','1','2','3','4','5','6','7','8','9']
-dataset_folder = '../../data/BaseOCR_MultiStyle'
+data_dir = os.path.join(LABO_PATH, "data")
+dataset_folder = os.path.join(data_dir, "BaseOCR_MultiStyle")
+if not os.path.exists(dataset_folder):
+    from data.downloader import downloadImages
+    downloadImages(data_dir)
 numClasses = len(digitos)
-imageDim = 28;         #% image dimension
-images, labels = loadDataset(dataset_folder, digitos, numClasses, imageDim)
+imageDim = 28         #% image dimension
+images, labels = loadDataset(dataset_folder, digitos, numClasses, imageDim, rm_dataset_folder=True)
 
 
 # Convolution Neural Network 
@@ -19,8 +27,8 @@ numFilters = 2;
 filterDim = 9;
 poolDim = 5;
 images = images[:,:,0:11]
-labels = labels[0:11]
-theta = cnnInitParams(imageDim,filterDim,numFilters,poolDim,numClasses)
+labels = labels[:,0:11]
+theta = cnnInitParams(imageDim, filterDim, numFilters, poolDim, numClasses)
 numImages = images.shape[2] #% numbero de imagenes
 
 # % Calcula costo y gradiente de una red neuronal convolucional simple
@@ -36,10 +44,10 @@ numImages = images.shape[2] #% numbero de imagenes
 # %  poolDim    -  dimension del area de agrupamiento
 
 
-
 # %% Obtener las matrices de parametros del roll de entrada 
 # % Wc es la matriz de pesos filterDim x filterDim x numFilters
 # % bc es el bias correspondiente
+
 
 # % Wd es la matriz densa de la capa escondida con numClasses x hiddenSize
 # % hiddenSize es el numero de unidades a la salida de la capa de pooling
@@ -66,33 +74,34 @@ bd_grad = np.zeros((bd.shape));
 # %  Es preciso conservarlos para el backpropagation.
 # %  Utilizar las funciones cnnConvolve y cnnPool
 
-convDim = imageDim-filterDim+1 #% dimension de la salida convolved
-outputDim = int((convDim)/poolDim) #% dimension de la salida subsampled
+convDim = imageDim - filterDim + 1 #% dimension de la salida convolved
+outputDim = convDim // poolDim #% dimension de la salida subsampled
 
 #% tensor convDim x convDim x numFilters x numImages 
-activations = np.zeros((convDim,convDim,numFilters,numImages))
+activations = np.zeros((convDim, convDim, numFilters, numImages))
 #% tensor outputDim x outputDim x numFilters x numImages
-activationsPooled = np.zeros((outputDim,outputDim,numFilters,numImages))
+activationsPooled = np.zeros((outputDim, outputDim, numFilters, numImages))
 
 #%%% IMPLEMENTACION AQUI %%%
 
-activations = None
-activationsPooled = None
+activations = cnnConvolve(filterDim, numFilters, images, Wc, bc)
+activationsPooled = cnnPool(poolDim, activations)
 #########################################################
    
 # % Redimensionar activations obteniendo 2D matriz, hiddenSize x numImages,
 # % para Softmax layer
-activationsPooled = np.reshape(activationsPooled,(-1,numImages))
+activationsPooled = np.reshape(activationsPooled, (-1, numImages))
 
 # %% Softmax Layer
 # %  Continuamos con la Forward propagation luego de las pooledActivations 
 # %  para aplicarlas a una capa softmax standard. probs recibe los resultados
 # %  numClasses x numImages que va a guardar la probabilidad de la pertenencia
 # %  de cada imagen a una clase.
-probs = np.zeros((numClasses,numImages))
+probs = np.zeros((numClasses, numImages))
 
 #%%% IMPLEMENTACION AQUI %%%
-
+output = Wd @ activationsPooled + bd
+probs += np.exp(output) / np.sum(np.exp(output), axis=0)
 
 ################################################
 # %%======================================================================
@@ -103,6 +112,7 @@ probs = np.zeros((numClasses,numImages))
 cost = 0 #% inicializo cost
 
 #%%% IMPLEMENTAR AQUI %%%
+cost += -np.sum(labels * np.log(probs)) / numImages
 
 ################################################
 # %%======================================================================
