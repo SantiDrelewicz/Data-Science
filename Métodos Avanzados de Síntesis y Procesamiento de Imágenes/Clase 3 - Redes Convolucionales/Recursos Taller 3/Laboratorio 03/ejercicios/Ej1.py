@@ -1,8 +1,8 @@
 import numpy as np
 import os, sys
-script_dir = os.path.dirname(os.path.abspath(__file__))
-labo_path = os.path.dirname(script_dir)
-sys.path.append(labo_path)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+LABO_PATH = os.path.dirname(SCRIPT_DIR)
+sys.path.append(LABO_PATH)
 from data.downloader import downloadImages
 from helper_functions import loadDataset
 from convolve import cnnConvolve, expit
@@ -19,7 +19,7 @@ poolDim = 3          #% dimension of pooling region
 #  Usamos un set pequeño de imagenes: las 8 primeras
 digitos = ['0','1','2','3','4','5','6','7','8','9']
 #  Descargamos el dataset en la carpeta ..data.BaseOCR_MultiStyle
-data_dir = os.path.join(labo_path, "data")
+data_dir = os.path.join(LABO_PATH, "data")
 dataset_folder = os.path.join(data_dir, "BaseOCR_MultiStyle")
 if not os.path.exists(dataset_folder):
     downloadImages(data_dir)
